@@ -1,0 +1,34 @@
+{
+  "name": "animeup-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/server.ts",
+    "start": "ts-node src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.11.0",
+    "@types/express": "^4.17.21",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "express-fileupload": "^1.5.0",
+    "mongoose": "^8.2.2",
+    "mongoose-autopopulate": "^1.1.0",
+    "mongoose-find-by-reference": "^1.0.8",
+    "mongoose-paginate-v2": "^1.8.0",
+    "require-dir": "^1.2.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.2"
+  },
+  "devDependencies": {
+    "@types/require-dir": "^1.0.4",
+    "prisma": "^5.11.0"
+  }
+}
