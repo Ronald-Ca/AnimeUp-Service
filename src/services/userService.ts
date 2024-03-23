@@ -1,18 +1,5 @@
 import { Prisma } from '@prisma/client'
 import { PrismaService } from '../../prisma/prismaService'
-
-interface User {
-    name: string
-    email: string
-    password: string
-}
-
-interface UserUpdate {
-    name?: any
-    email?: any
-    password?: any
-}
-
 export default class UserService {
 
     async existUser(email: string) {
@@ -27,14 +14,20 @@ export default class UserService {
         return users
     }
 
-    async createUser(user: User) {
+    async createUser(user: Prisma.UserCreateInput) {
         const data = await PrismaService.user.create({ data: user })
 
         return data
     }
 
-    async editUser(id: string, user: UserUpdate) {
+    async editUser(id: string, user: Prisma.UserUpdateInput) {
         const data = await PrismaService.user.update({ where: { id }, data: user })
+
+        return data
+    }
+
+    async deleteUser(id: string) {
+        const data = await PrismaService.user.delete({ where: { id } })
 
         return data
     }
