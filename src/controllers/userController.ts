@@ -6,6 +6,7 @@ import { userCreateZod } from "../validations/user/userCreate";
 import { responseError, responseSuccess } from "../utils/jsonResponse";
 import InternalError from "../utils/internalError";
 import { userEditZod } from "../validations/user/editUser";
+import { validIdZod } from "../validations/global/ValidId";
 
 export default class UserController {
     private _userService = new UserService()
@@ -14,14 +15,14 @@ export default class UserController {
         try {
             const resService = await this._userService.getUsers();
 
-            res.status(200).json(responseSuccess('Success', resService));
+            return res.status(200).json(responseSuccess('Success', resService));
         } catch (error) {
             if (error instanceof InternalError) throw new InternalError(error.message)
             throw error
         }
     }
 
-    async create(req: Request, res: Response) {
+    async createUser(req: Request, res: Response) {
         try {
             const { email, name, password, nickname } = userCreateZod.parse(req.body)
 
@@ -37,7 +38,7 @@ export default class UserController {
 
             const resService = await this._userService.createUser(user)
 
-            res.status(200).json(responseSuccess('Success', resService))
+            return res.status(200).json(responseSuccess('Success', resService))
         } catch (error) {
             if (error instanceof InternalError) throw new InternalError(error.message)
             throw error
@@ -46,8 +47,11 @@ export default class UserController {
 
     async editUser(req: Request, res: Response) {
         try {
-            const { id } = req.params;
+            const { id } = validIdZod.parse(req.params);
             const { name, nickname } = userEditZod.parse(req.body);
+
+            const existUser = await this._userService.existUserById(id);
+            if (!existUser) return res.status(404).json(responseError(['User not found']));
 
             const user: Prisma.UserUpdateInput = {
                 name: name,
@@ -56,7 +60,7 @@ export default class UserController {
 
             const resService = await this._userService.editUser(id, user)
 
-            res.status(200).json(responseSuccess('Success', resService));
+            return res.status(200).json(responseSuccess('Success', resService));
         } catch (error) {
             if (error instanceof InternalError) throw new InternalError(error.message)
             throw error
@@ -65,11 +69,14 @@ export default class UserController {
 
     async deleteUser(req: Request, res: Response) {
         try {
-            const { id } = req.params;
+            const { id } = validIdZod.parse(req.params);
+
+            const existUser = await this._userService.existUserById(id);
+            if (!existUser) return res.status(404).json(responseError(['User not found']));
 
             const resService = await this._userService.deleteUser(id);
 
-            res.status(200).json(responseSuccess('Success', resService));
+            return res.status(200).json(responseSuccess('Success', resService));
         } catch (error) {
             if (error instanceof InternalError) throw new InternalError(error.message)
             throw error

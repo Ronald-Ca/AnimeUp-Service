@@ -8,6 +8,12 @@ export default class UserService {
         return !!user
     }
 
+    async existUserById(id: string) {
+        const user = await PrismaService.user.findUnique({ where: { id } })
+
+        return !!user
+    }
+
     async getUsers() {
         const users = await PrismaService.user.findMany()
 
