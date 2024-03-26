@@ -16,6 +16,8 @@ model User {
   name     String
   password String
   nickname String?
+  image    String?
+  active   Boolean @default(true)
   Anime    Anime[]
 
   @@map("users")
