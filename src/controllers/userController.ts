@@ -22,19 +22,6 @@ export default class UserController {
         }
     }
 
-    async getUserById(req: Request, res: Response) {
-        try {
-            const { id } = validIdZod.parse(req.params);
-
-            const resService = await this._userService.existUserById(id);
-
-            return res.status(200).json(responseSuccess('Success', resService));
-        } catch (error) {
-            if (error instanceof InternalError) throw new InternalError(error.message)
-            throw error
-        }
-    }
-
     async createUser(req: Request, res: Response) {
         try {
             const { email, name, password, nickname } = userCreateZod.parse(req.body)

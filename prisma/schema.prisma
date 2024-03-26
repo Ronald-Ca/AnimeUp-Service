@@ -12,13 +12,12 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email          String           @unique
-  name           String
-  password       String
-  nickname       String?
-  Anime          Anime[]
-  FavoriteAnime  FavoriteAnime[]
-  FollowingAnime FollowingAnime[]
+  email         String          @unique
+  name          String
+  password      String
+  nickname      String?
+  Anime         Anime[]
+  FavoriteAnime FavoriteAnime[]
 
   @@map("users")
 }
@@ -32,10 +31,10 @@ model Anime {
   description  String
   image        String
   episodes     Int
-  year         Int
   rating       Float
   publicRating Float?
-  status       String?
+  year         Int
+  status       String
   trailer      String?
   opinion      String?
 
@@ -45,30 +44,15 @@ model Anime {
   categoryId String?   @db.ObjectId
   Category   Category? @relation(fields: [categoryId], references: [id])
 
-  characterId    String?          @db.ObjectId
-  Character      Character?       @relation(fields: [characterId], references: [id])
-  FavoriteAnime  FavoriteAnime[]
-  AnimeOpenings  AnimeOpenings[]
-  Season         Season?          @relation(fields: [seasonId], references: [id])
-  seasonId       String?          @db.ObjectId
-  FollowingAnime FollowingAnime[]
+  characterId   String?         @db.ObjectId
+  Character     Character?      @relation(fields: [characterId], references: [id])
+  FavoriteAnime FavoriteAnime[]
+  AnimeOpenings AnimeOpenings[]
+  Season        Season?         @relation(fields: [seasonId], references: [id])
+  seasonId      String?         @db.ObjectId
 }
 
 model FavoriteAnime {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  userId String @db.ObjectId
-  User   User   @relation(fields: [userId], references: [id])
-
-  animeId String @db.ObjectId
-  Anime   Anime  @relation(fields: [animeId], references: [id])
-
-  @@unique([userId, animeId])
-}
-
-model FollowingAnime {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -103,9 +87,7 @@ model Season {
   description String
   year        Int
   episodes    Int
-  status      String?
-  trailer     String?
-  opinion     String?
+  opinion     String
 
   Anime Anime[]
 }
