@@ -4,7 +4,7 @@ import anime from './anime'
 
 const server = express()
 
-server.use('/user', user)
+server.use('/webhook/user', user)
 server.use('/anime', anime)
 
 export default server

@@ -23,6 +23,7 @@
     "mongoose-autopopulate": "^1.1.0",
     "mongoose-find-by-reference": "^1.0.8",
     "mongoose-paginate-v2": "^1.8.0",
+    "readmeio": "^6.2.0",
     "require-dir": "^1.2.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.7.1",
