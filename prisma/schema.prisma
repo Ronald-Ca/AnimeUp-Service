@@ -59,6 +59,7 @@ model AnimeOpenings {
 
   title String
   audio String
+  video String
 
   animeId String @db.ObjectId
   Anime   Anime  @relation(fields: [animeId], references: [id])
