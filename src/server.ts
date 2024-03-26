@@ -16,7 +16,7 @@ const app = express();
 const PORT = process.env.PORT || 1818;
 
 app.use((req, res, next) => {
-    readme.log('rdme_xn8s9hf4276563d41b1b63f414f7b5adc8f954ad0c0be61892f7ee7c7539eed2937695', req, res, {
+    readme.log(process.env.README_KEY, req, res, {
         // User's API Key
         apiKey: 'owlbert-api-key',
         // Username to show in ReadMe's dashboard
