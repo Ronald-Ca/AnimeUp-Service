@@ -5,17 +5,22 @@ import { PrismaService } from "../../prisma/prismaService"
 
 export default async function Auth(req: Request, res: Response, next: NextFunction) {
     const authSecret = <string>process.env.AUTH_SECRET
-
     try {
         const authHeader = req.headers.authorization
-        if (!authHeader) return res.status(401).json(responseError(['Token not provided'], null, 401))
+
+        if (!authHeader) {
+            return res.status(401).json(responseError(['Token not provided'], null, 401))
+        }
 
         const parts = authHeader.split(' ')
-        if (parts.length !== 2) return res.status(401).json(responseError(['Token malformatted'], null, 401))
+        if (!(parts.length !== 2)) {
+            return res.status(401).json(responseError(['Token malformatted'], null, 401))
+        }
 
         const [scheme, token] = parts
-
-        if (!/^Bearer$/i.test(scheme)) return res.status(401).json(responseError(['Token malformatted'], null, 401))
+        if (!/^Bearer$/i.test(scheme)) {
+            return res.status(401).json(responseError(['Token malformatted'], null, 401))
+        }
 
         if (authSecret) {
             try {
@@ -24,7 +29,7 @@ export default async function Auth(req: Request, res: Response, next: NextFuncti
                 const response = await PrismaService.user.findUnique({ where: { id: decoded.id } })
                 if (!response) return res.status(401).json(responseError(['User not found!'], null, 401))
                 if (!response.active) return res.status(401).json(responseError(['User not active!'], null, 401))
-                req.userID = decoded.id as string
+                req.userID = decoded.id
                 return next()
             } catch (err) {
                 return res.status(401).json(responseError(['Token invalid'], null, 401))

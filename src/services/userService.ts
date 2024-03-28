@@ -2,10 +2,16 @@ import { Prisma } from '@prisma/client'
 import { PrismaService } from '../../prisma/prismaService'
 export default class UserService {
 
-    async existUser(email: string) {
+    async existEmailUser(email: string) {
         const user = await PrismaService.user.findUnique({ where: { email } })
 
         return !!user
+    }
+
+    async findByEmail(email: string) {
+        const user = await PrismaService.user.findUnique({ where: { email } })
+
+        return user
     }
 
     async existUserById(id: string) {

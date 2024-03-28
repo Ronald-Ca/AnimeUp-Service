@@ -7,6 +7,8 @@ import { responseError, responseSuccess } from "../utils/jsonResponse";
 import InternalError from "../utils/internalError";
 import { userEditZod } from "../validations/user/editUser";
 import { validIdZod } from "../validations/global/ValidId";
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 export default class UserController {
     private _userService = new UserService()
@@ -26,7 +28,7 @@ export default class UserController {
         try {
             const { email, name, password, nickname } = userCreateZod.parse(req.body)
 
-            const emailExist = await this._userService.existUser(email)
+            const emailExist = await this._userService.existEmailUser(email)
             if (emailExist) return res.status(400).json(responseError(['E-mail already registered']))
 
             const user: Prisma.UserCreateInput = {
@@ -77,6 +79,29 @@ export default class UserController {
             const resService = await this._userService.deleteUser(id);
 
             return res.status(200).json(responseSuccess('Success', resService));
+        } catch (error) {
+            if (error instanceof InternalError) throw new InternalError(error.message)
+            throw error
+        }
+    }
+
+    async authenticate(req: Request, res: Response) {
+        try {
+            const { email, password } = req.body
+
+            const result = await this._userService.findByEmail(email)
+            if (!result) return res.status(400).json(responseError(['User not found']))
+            if (!result || !result.password) return res.status(400).json(responseError(['Invalid User or Invalid password']))
+
+            if (!(await bcrypt.compare(password, result.password))) return res.status(400).json(responseError(['Invalid User or Invalid password']))
+
+            result.password = ''
+
+            if (!result.active) return res.status(400).json(responseError(['User is inactive, contact the administrator']))
+
+            const token = jwt.sign({ id: result.id }, <string>process.env.AUTH_SECRET, { expiresIn: 5000 })
+
+            return res.status(200).json(responseSuccess('Success', { user: result, token }))
         } catch (error) {
             if (error instanceof InternalError) throw new InternalError(error.message)
             throw error
