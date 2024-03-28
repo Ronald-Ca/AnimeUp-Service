@@ -2,6 +2,10 @@ import { Request, Response } from 'express';
 import InternalError from '../utils/internalError';
 import SeasonService from '../services/seasonService';
 import { responseSuccess } from '../utils/jsonResponse';
+import { Prisma } from '@prisma/client';
+import { createSeasonZod } from '../validations/season/createSeason';
+import { editSeasonZod } from '../validations/season/editSeason';
+import { validIdZod } from '../validations/global/validId';
 export default class SeasonController {
     private _seasonService = new SeasonService();
     async getSeasons(req: Request, res: Response) {
@@ -17,8 +21,9 @@ export default class SeasonController {
 
     async createSeason(req: Request, res: Response) {
         try {
-            const { name, description, year, image, episodes, status, opinion } = req.body;
-            const season = {
+            const { name, description, year, image, episodes, status, opinion } = createSeasonZod.parse(req.body)
+
+            const season: Prisma.SeasonCreateInput = {
                 name,
                 description,
                 year,
@@ -27,7 +32,9 @@ export default class SeasonController {
                 status,
                 opinion
             };
+
             const resService = await this._seasonService.createSeason(season);
+
             return res.status(200).json(responseSuccess('Success', resService));
         }
         catch (error) {
@@ -39,7 +46,9 @@ export default class SeasonController {
     async editSeason(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const { name, description, year, image, episodes, status, opinion } = req.body;
+
+            const { name, description, year, image, episodes, status, opinion } = editSeasonZod.parse(req.body);
+
             const season = {
                 name,
                 description,
@@ -49,7 +58,9 @@ export default class SeasonController {
                 status,
                 opinion
             };
+
             const resService = await this._seasonService.editSeason(id, season);
+
             return res.status(200).json(responseSuccess('Success', resService));
         }
         catch (error) {
@@ -60,7 +71,7 @@ export default class SeasonController {
 
     async deleteSeason(req: Request, res: Response) {
         try {
-            const { id } = req.params;
+            const { id } = validIdZod.parse(req.params);
             const resService = await this._seasonService.deleteSeason(id);
             return res.status(200).json(responseSuccess('Success', resService));
         }

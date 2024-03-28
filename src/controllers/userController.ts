@@ -9,6 +9,7 @@ import { userEditZod } from "../validations/user/editUser";
 import { validIdZod } from "../validations/global/ValidId";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { userAuthenticateZod } from "../validations/user/authenticate";
 
 export default class UserController {
     private _userService = new UserService()
@@ -87,7 +88,7 @@ export default class UserController {
 
     async authenticate(req: Request, res: Response) {
         try {
-            const { email, password } = req.body
+            const { email, password } = userAuthenticateZod.parse(req.body)
 
             const result = await this._userService.findByEmail(email)
             if (!result) return res.status(400).json(responseError(['User not found']))
