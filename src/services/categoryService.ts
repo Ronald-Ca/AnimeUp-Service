@@ -7,6 +7,12 @@ export default class CategoryService {
         return categories
     }
 
+    async getCategoryByName(name: string) {
+        const data = await PrismaService.category.findFirst({ where: { name } })
+
+        return data
+    }
+
     async createCategory(category: Prisma.CategoryCreateInput) {
         const data = await PrismaService.category.create({ data: category })
 

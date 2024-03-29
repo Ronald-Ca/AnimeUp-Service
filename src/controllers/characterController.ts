@@ -4,6 +4,9 @@ import { Prisma } from "@prisma/client";
 import UserService from "../services/userService";
 import { responseError, responseSuccess } from "../utils/jsonResponse";
 import CharacterService from '../services/characterService';
+import { createCharacterZod } from '../validations/character/createCharacter';
+import { editCharacterZod } from '../validations/character/editCharacter';
+import { validIdZod } from '../validations/global/validId';
 
 export default class CharacterController {
     private _characterService = new CharacterService()
@@ -20,12 +23,17 @@ export default class CharacterController {
 
     async createCharacter(req: Request, res: Response) {
         try {
-            const { name, description, image } = req.body
+            const { name, description, image, age, audio, gif, height, video } = createCharacterZod.parse(req.body)
 
             const character: Prisma.CharacterCreateInput = {
                 name,
                 description,
                 image,
+                age,
+                audio,
+                gif,
+                height,
+                video,
             }
 
             const resService = await this._characterService.createCharacter(character)
@@ -39,8 +47,8 @@ export default class CharacterController {
 
     async editCharacter(req: Request, res: Response) {
         try {
-            const { id } = req.params;
-            const { name, description, image } = req.body;
+            const { id } = validIdZod.parse(req.params)
+            const { name, description, image, age, audio, gif, height, video } = editCharacterZod.parse(req.body)
 
             const existCharacter = await this._characterService.getCharacterById(id);
             if (!existCharacter) return res.status(404).json(responseError(['Character not found']));
@@ -49,6 +57,11 @@ export default class CharacterController {
                 name,
                 description,
                 image,
+                age,
+                audio,
+                gif,
+                height,
+                video,
             }
 
             const resService = await this._characterService.editCharacter(id, character)
@@ -62,7 +75,7 @@ export default class CharacterController {
 
     async deleteCharacter(req: Request, res: Response) {
         try {
-            const { id } = req.params;
+            const { id } = validIdZod.parse(req.params)
 
             const existCharacter = await this._characterService.getCharacterById(id);
             if (!existCharacter) return res.status(404).json(responseError(['Character not found']));

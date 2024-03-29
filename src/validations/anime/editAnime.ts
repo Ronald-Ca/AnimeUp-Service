@@ -7,8 +7,8 @@ export const editAnimeZod = z.object({
     episodes: z.number().optional(),
     rating: z.number().optional(),
     publicRating: z.number().optional(),
-    year: z.number(),
-    status: z.string(),
+    year: z.number().optional(),
+    status: z.string().optional(),
     trailer: z.string().optional(),
     opinion: z.string().optional(),
 })

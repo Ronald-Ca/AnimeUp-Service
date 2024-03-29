@@ -3,6 +3,9 @@ import CategoryService from '../services/categoryService';
 import { responseError, responseSuccess } from "../utils/jsonResponse";
 import InternalError from '../utils/internalError';
 import { Prisma } from '@prisma/client';
+import { validIdZod } from '../validations/global/validId';
+import { createCategoryZod } from '../validations/category/createCategory';
+import { editCategoryZod } from '../validations/category/editCategory';
 
 export default class CategoryController {
     private _categoryService = new CategoryService()
@@ -20,7 +23,10 @@ export default class CategoryController {
 
     async createCategory(req: Request, res: Response) {
         try {
-            const { name, description } = req.body
+            const { name, description } = createCategoryZod.parse(req.body)
+
+            const existsCategory = await this._categoryService.getCategoryByName(name)
+            if (existsCategory) return res.status(400).json(responseError(['Category already exists']))
 
             const category: Prisma.CategoryCreateInput = {
                 name,
@@ -38,8 +44,8 @@ export default class CategoryController {
 
     async editCategory(req: Request, res: Response) {
         try {
-            const { id } = req.params
-            const { name, description } = req.body
+            const { id } = validIdZod.parse(req.params)
+            const { name, description } = editCategoryZod.parse(req.body)
 
             const category: Prisma.CategoryUpdateInput = {
                 name,
@@ -57,7 +63,7 @@ export default class CategoryController {
 
     async deleteCategory(req: Request, res: Response) {
         try {
-            const { id } = req.params
+            const { id } = validIdZod.parse(req.params)
 
             const existsCategory = await this._categoryService.getCategoryById(id)
             if (!existsCategory) return res.status(404).json(responseError(['Category not found']))

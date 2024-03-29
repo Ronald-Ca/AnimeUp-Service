@@ -101,5 +101,11 @@ model Character {
   name        String
   description String
   image       String
-  Anime       Anime[]
+  age         Int?
+  height      String?
+  gif         String?
+  video       String?
+  audio       String?
+
+  Anime Anime[]
 }
