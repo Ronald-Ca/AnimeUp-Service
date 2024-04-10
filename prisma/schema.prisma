@@ -47,11 +47,13 @@ model Anime {
   categoryId String?   @db.ObjectId
   Category   Category? @relation(fields: [categoryId], references: [id])
 
-  characterId   String?         @db.ObjectId
-  Character     Character?      @relation(fields: [characterId], references: [id])
+  characterId String?    @db.ObjectId
+  Character   Character? @relation(fields: [characterId], references: [id])
+
+  seasonId String? @db.ObjectId
+  Season   Season? @relation(fields: [seasonId], references: [id])
+
   AnimeOpenings AnimeOpenings[]
-  Season        Season?         @relation(fields: [seasonId], references: [id])
-  seasonId      String?         @db.ObjectId
 }
 
 model AnimeOpenings {
@@ -59,9 +61,9 @@ model AnimeOpenings {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  title String
-  audio String
-  video String
+  title String?
+  audio String?
+  video String?
 
   animeId String @db.ObjectId
   Anime   Anime  @relation(fields: [animeId], references: [id])

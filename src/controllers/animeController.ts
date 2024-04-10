@@ -38,6 +38,8 @@ export default class AnimeController {
                 trailer
             }
 
+            console.log(anime)
+
             const resService = await this._animeService.createAnime(anime)
 
             return res.status(200).json(responseSuccess('Success', resService));
