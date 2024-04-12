@@ -15,6 +15,19 @@ export default class AnimeService {
         return animes
     }
 
+    async getBestAnimes() {
+        const animes = await PrismaService.anime.findMany({
+            where: {
+                favorite: true
+            },
+            orderBy: {
+                rating: 'desc'
+            }
+        })
+
+        return animes
+    }
+
     async createAnime(anime: Prisma.AnimeCreateInput) {
         const data = await PrismaService.anime.create({ data: anime })
 

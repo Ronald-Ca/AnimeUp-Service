@@ -21,6 +21,17 @@ export default class AnimeController {
         }
     }
 
+    async getBestAnimes(_: Request, res: Response) {
+        try {
+            const resService = await this._animeService.getBestAnimes();
+
+            return res.status(200).json(responseSuccess('Success', resService));
+        } catch (error) {
+            if (error instanceof InternalError) throw new InternalError(error.message)
+            throw error
+        }
+    }
+
     async createAnime(req: Request, res: Response) {
         try {
             const { title, description, episodes, image, rating, status, year, opinion, publicRating, trailer } = createAnimeZod.parse(req.body)
