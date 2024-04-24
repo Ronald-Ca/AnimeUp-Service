@@ -30,7 +30,7 @@ model Anime {
 
   title        String
   description  String
-  image        String
+  image        String?
   episodes     Int
   year         Int
   rating       Float

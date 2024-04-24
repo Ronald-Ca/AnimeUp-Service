@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import routes from './routes';
 import cors from 'cors';
+import fileUpload from 'express-fileupload'
 
 dotenv.config();
 
@@ -22,6 +23,8 @@ app.use(cors(
         allowedHeaders: ['Content-Type', 'Authorization']
     }
 ))
+
+app.use(fileUpload({ useTempFiles: false }))
 
 app.use(express.json());
 app.use(routes);
