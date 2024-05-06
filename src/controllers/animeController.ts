@@ -14,9 +14,9 @@ export default class AnimeController {
 
     async getAnimes(_: Request, res: Response) {
         try {
-            const resService = await this._animeService.getAnimes();
+            const resService = await this._animeService.getAnimes()
 
-            return res.status(200).json(responseSuccess('Success', resService));
+            return res.status(200).json(responseSuccess('Success', resService))
         } catch (error) {
             if (error instanceof InternalError) throw new InternalError(error.message)
             throw error

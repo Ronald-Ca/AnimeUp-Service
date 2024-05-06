@@ -29,7 +29,6 @@ export default async function Auth(req: Request, res: Response, next: NextFuncti
                 const response = await PrismaService.user.findUnique({ where: { id: decoded.id } })
                 if (!response) return res.status(401).json(responseError(['User not found!'], null, 401))
                 if (!response.active) return res.status(401).json(responseError(['User not active!'], null, 401))
-                req.userID = decoded.id
                 return next()
             } catch (err) {
                 return res.status(401).json(responseError(['Token invalid'], null, 401))
