@@ -5,7 +5,6 @@ import { responseSuccess } from '../utils/jsonResponse';
 import { Prisma } from '@prisma/client';
 import { createSeasonZod } from '../validations/season/createSeason';
 import { editSeasonZod } from '../validations/season/editSeason';
-import { validIdZod } from '../validations/global/validId';
 export default class SeasonController {
     private _seasonService = new SeasonService();
     async getSeasons(req: Request, res: Response) {
@@ -71,7 +70,7 @@ export default class SeasonController {
 
     async deleteSeason(req: Request, res: Response) {
         try {
-            const { id } = validIdZod.parse(req.params);
+            const { id } = req.params
             const resService = await this._seasonService.deleteSeason(id);
             return res.status(200).json(responseSuccess('Success', resService));
         }

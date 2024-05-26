@@ -6,7 +6,7 @@ const router = Router();
 const controller = new SeasonController();
 
 router.get('/get', Auth, (req: Request, res: Response, next: NextFunction) => { controller.getSeasons(req, res).catch((erro) => next(erro)) });
-router.post('/create', Auth, (req: Request, res: Response, next: NextFunction) => { controller.createSeason(req, res).catch((erro) => next(erro)) });
+router.post('/create', (req: Request, res: Response, next: NextFunction) => { controller.createSeason(req, res).catch((erro) => next(erro)) });
 router.put('/update/:id', Auth, (req: Request, res: Response, next: NextFunction) => { controller.editSeason(req, res).catch((erro) => next(erro)) });
 router.delete('/delete/:id', Auth, (req: Request, res: Response, next: NextFunction) => { controller.deleteSeason(req, res).catch((erro) => next(erro)) });
 

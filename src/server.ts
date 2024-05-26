@@ -1,9 +1,9 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import routes from './routes';
 import cors from 'cors';
 import fileUpload from 'express-fileupload'
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
